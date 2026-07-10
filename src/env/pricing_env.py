@@ -1,6 +1,9 @@
 import gymnasium as gym
 from gymnasium import spaces
 import numpy as np
+import sys
+import os
+sys.path.append(os.path.dirname(__file__))
 
 
 class DynamicPricingEnv(gym.Env):
@@ -51,26 +54,38 @@ class DynamicPricingEnv(gym.Env):
         return state, info
 
     def step(self, action):
-        # NOTE: demand function and reward logic will be implemented
-        # on Day 4 and Day 5. This is just the skeleton for now.
+        from demand_function import simulate_purchase
+
         price = self.price_levels[action]
 
-        # Placeholder logic (to be replaced with real demand function)
+        # Simulate whether customer buys at this price
+        customer_buys = simulate_purchase(
+            price, self.days_until_departure, self.max_days
+        )
+
         reward = 0
-        terminated = False
-        truncated = False
-        info = {"price": price}
+        if customer_buys and self.remaining_inventory > 0:
+            reward = price
+            self.remaining_inventory -= 1
 
         # Time always moves forward
         self.days_until_departure -= 1
 
+        terminated = False
+        truncated = False
+
+        # Episode ends if sold out or deadline reached
         if self.remaining_inventory <= 0 or self.days_until_departure <= 0:
             terminated = True
+            # Penalty for unsold inventory at episode end
+            if self.remaining_inventory > 0:
+                reward -= self.remaining_inventory * 10  # spoilage penalty
 
         state = np.array(
             [self.remaining_inventory, self.days_until_departure],
             dtype=np.int32
         )
+        info = {"price": price, "customer_bought": customer_buys}
         return state, reward, terminated, truncated, info
 
     def render(self):
