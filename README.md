@@ -1,30 +1,13 @@
-## Week 1 — Dynamic Pricing RL Environment (Project 2)
+# Week 1 - Geospatial Data Acquisition and Processing
 
-### Overview
-A custom Gymnasium environment simulating dynamic pricing of finite
-inventory (e.g., airline seats, hotel rooms) over a limited selling window.
+## Completed Tasks
 
-### Files
-- `docs/mdp_design.md` — MDP formulation (state, action, reward design)
-- `src/env/pricing_env.py` — Custom `gym.Env` implementation
-- `src/env/demand_function.py` — Stochastic demand model
-- `notebooks/test_env.py` — Sanity checks and multi-episode validation
-
-### State Space
-`[remaining_inventory, days_until_departure]`
-
-### Action Space
-Discrete price levels: `[100, 150, 200, 250, 300]`
-
-### Reward
-- Price charged if customer purchases, else 0
-- Penalty applied at episode end for unsold inventory
-
-### How to Test
-```bash
-python notebooks/test_env.py
-```
-
-### Status
-✅ Week 1 complete — environment built, tested, and validated with a
-random policy. Ready for Week 2 (baseline heuristics + Q-Learning).
+- Downloaded King County Housing Dataset
+- Loaded dataset using Pandas
+- Performed Exploratory Data Analysis (EDA)
+- Checked Missing Values
+- Removed Duplicate Records
+- Removed Price Outliers using IQR
+- Created GeoDataFrame using GeoPandas
+- Built Interactive House Location Map using Folium
+- Saved Cleaned Dataset
